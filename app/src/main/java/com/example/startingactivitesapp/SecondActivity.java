@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,6 +24,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,6 +39,36 @@ public class SecondActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+
+        Intent  fromPrevious = getIntent();
+
+        TextView txtWelcome=(TextView) findViewById(R.id.txtWelcome);
+
+        String emailAdress= fromPrevious.getStringExtra("EmailAddress");
+        txtWelcome.setText("Welcome Back: "+emailAdress );
+        /////
+        Button btnPhone=(Button)findViewById(R.id.btnPhone);
+        Button btnSms=(Button)findViewById(R.id.btnSms);
+        Button btnPic=(Button)findViewById(R.id.btnPic);
+        Button btnMap=(Button)findViewById(R.id.btnMap);
+        EditText editText=(EditText) findViewById(R.id.edtPhone);
+        ImageView img=(ImageView) findViewById(R.id.img1);
+
+        //// Read image file to get the image that I have saved
+        String filename="Picture.png";
+        File file = new File( getFilesDir(), filename);
+        if(file.exists())
+        {
+            Log.w("Mervat", "file exists");
+            Bitmap theImage = BitmapFactory.decodeFile(file.getPath());
+            img.setImageBitmap( theImage );
+        }
+        else {
+            Log.w("Mervat", "file not exists");
+        }
+
+
+
 
 
         // Register activity result launcher
@@ -50,16 +84,8 @@ public class SecondActivity extends AppCompatActivity {
                     }
                 });
 
-        Intent fromPrevious = getIntent();
-        String emailAdress= fromPrevious.getStringExtra("EmailAddress");
-        TextView txtWelcome=(TextView) findViewById(R.id.txtWelcome);
-        txtWelcome.setText("Welcome Back: "+emailAdress );
 
-        Button btnPhone=(Button)findViewById(R.id.btnPhone);
-        Button btnSms=(Button)findViewById(R.id.btnSms);
-        Button btnPic=(Button)findViewById(R.id.btnPic);
-        Button btnMap=(Button)findViewById(R.id.btnMap);
-        EditText editText=(EditText) findViewById(R.id.edtPhone);
+
 
         btnPhone.setOnClickListener(view -> {
             // Replace phoneNumber with the recipient's phone number
@@ -119,17 +145,26 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.w("Mervat","Done pic1");
-        Bitmap thumbnail=data.getParcelableExtra("data");
-        ImageView img=(ImageView) findViewById(R.id.img1);
-        img.setImageBitmap(thumbnail);
 
-        /*
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Log.w("Mervat","Done pic2");
-         Bitmap thumbnail=data.getParcelableExtra("data");
-            ImageView img=(ImageView) findViewById(R.id.img1);
-            img.setImageBitmap(thumbnail);
-        }*/
+        /// show the captured image in the imageview
+        ImageView img=(ImageView) findViewById(R.id.img1);
+        Bitmap thumbnail=data.getParcelableExtra("data");
+        img.setImageBitmap(thumbnail);
+       //// save the captured image in my device
+        FileOutputStream fOut = null;
+        try {
+            fOut = openFileOutput("Picture.png", Context.MODE_PRIVATE);
+
+            thumbnail.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+            Log.w("Mervat", "file saved");
+        }
+        catch (FileNotFoundException e)
+        { e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

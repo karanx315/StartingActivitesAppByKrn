@@ -2,7 +2,9 @@ package com.example.startingactivitesapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -14,13 +16,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // get the data from the saved share preferences
+        SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        String emailAddress = prefs.getString("LoginName", "");
+        //
+
         Log.w("Main Activity","On create");
         Button btn1=(Button)findViewById(R.id.btn1);
-
         EditText emailEditText=(EditText) findViewById(R.id.editTextTextEmailAddress);
+
+        emailEditText.setText(emailAddress );
+
+
+        //1- create SharedPreferences.Editor object
+        SharedPreferences.Editor editor = prefs.edit();
+
         btn1.setOnClickListener(view -> {
             Intent nextPage = new Intent( MainActivity.this, SecondActivity.class);
+
             nextPage.putExtra( "EmailAddress", emailEditText.getText().toString() );
+
+            //2. save the data into my device memory
+            editor.putString("LoginName", emailEditText.getText().toString());
+            editor.apply();
+
 
             startActivity( nextPage);
         });
