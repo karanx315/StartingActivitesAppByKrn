@@ -5,11 +5,14 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -30,10 +33,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
+import android.Manifest;
 public class SecondActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private ActivityResultLauncher<Intent> cameraResult;
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,17 @@ public class SecondActivity extends AppCompatActivity {
 
         String emailAdress= fromPrevious.getStringExtra("EmailAddress");
         txtWelcome.setText("Welcome Back: "+emailAdress );
-        /////
+        /////Handle Runtime Permissions
+        //: If your app targets Android 6.0 (API level 23) or higher, you need to handle runtime permissions.
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // You can directly request the permission.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    CAMERA_PERMISSION_REQUEST_CODE);
+        }
+        ///
         Button btnPhone=(Button)findViewById(R.id.btnPhone);
         Button btnSms=(Button)findViewById(R.id.btnSms);
         Button btnPic=(Button)findViewById(R.id.btnPic);
@@ -128,6 +142,9 @@ public class SecondActivity extends AppCompatActivity {
         });
 
         btnPic.setOnClickListener(view -> {
+
+
+
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             cameraResult.launch(cameraIntent);
 
