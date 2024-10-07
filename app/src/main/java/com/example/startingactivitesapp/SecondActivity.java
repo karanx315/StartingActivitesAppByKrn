@@ -93,7 +93,7 @@ public class SecondActivity extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent data = result.getData();
-                            Log.w("Mervat", "Result2....>");
+                            Log.w("As", "Result2....>");
                         }
                     }
                 });
@@ -175,7 +175,7 @@ public class SecondActivity extends AppCompatActivity {
             thumbnail.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             fOut.flush();
             fOut.close();
-            Log.w("Mervat", "file saved");
+            Log.w("As", "file saved");
         }
         catch (FileNotFoundException e)
         { e.printStackTrace();
