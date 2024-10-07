@@ -73,12 +73,12 @@ public class SecondActivity extends AppCompatActivity {
         File file = new File( getFilesDir(), filename);
         if(file.exists())
         {
-            Log.w("Mervat", "file exists");
+            Log.w("As", "file exists");
             Bitmap theImage = BitmapFactory.decodeFile(file.getPath());
             img.setImageBitmap( theImage );
         }
         else {
-            Log.w("Mervat", "file not exists");
+            Log.w("As", "file not exists");
         }
 
 
