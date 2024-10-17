@@ -87,14 +87,14 @@
     <!-- Image View -->
     <ImageView
         android:id="@+id/img1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="300dp"
+        android:layout_width="321dp"
+        android:layout_height="329dp"
+        android:layout_marginBottom="40dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ping1" />
+        app:srcCompat="@drawable/ping" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
